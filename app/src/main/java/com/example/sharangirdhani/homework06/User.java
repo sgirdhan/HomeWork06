@@ -1,5 +1,6 @@
 package com.example.sharangirdhani.homework06;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -18,6 +19,18 @@ public class User extends RealmObject {
     private String          firstName;
     @Required
     private String          lastName;
+    @Required
+    private String          uri;
+
+    public RealmList<Instructor> instructors;
+
+    public RealmList<Instructor> getInstructors() {
+        return instructors;
+    }
+
+    public void setInstructors(RealmList<Instructor> instructors) {
+        this.instructors = instructors;
+    }
 
     @Override
     public String toString() {
@@ -26,7 +39,16 @@ public class User extends RealmObject {
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", uri='" + uri + '\'' +
                 '}';
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     public String getPassword() {

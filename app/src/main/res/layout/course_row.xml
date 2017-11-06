@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="20dp">
+
+
+    <ImageButton
+        android:id="@+id/instruct_image"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/courseTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_toEndOf="@+id/instruct_image"
+        android:text="Title"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/instruct_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/courseTitle"
+        android:layout_below="@+id/courseTitle"
+        android:text="Instructor"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/courseTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/instruct_name"
+        android:layout_below="@+id/instruct_name"
+        android:text="Mon 6:30 PM"
+        android:layout_marginTop="5dp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>

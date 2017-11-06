@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    tools:context="com.example.sharangirdhani.homework06.AddInstructorFragment">
+
+    <ImageButton
+        android:id="@+id/imagebuttonAvatar"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/default_cam" />
+
+    <EditText
+        android:id="@+id/editTextFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imagebuttonAvatar"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/hintFirstName"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/black"
+        />
+
+    <EditText
+        android:id="@+id/editTextLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editTextFirstName"
+        android:layout_marginTop="19dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/hintLastName"
+        android:textColor="@android:color/black"/>
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextFirstName"
+        android:layout_below="@+id/editTextLastName"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="Email"
+        android:textColor="@android:color/black"/>
+
+    <EditText
+        android:id="@+id/editTextWebsite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editTextEmail"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Personal website"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/btnReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editTextWebsite"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="25dp"
+        android:text="Reset" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnReset"
+        android:layout_marginStart="54dp"
+        android:layout_toEndOf="@+id/btnReset"
+        android:text="Add" />
+
+</RelativeLayout>

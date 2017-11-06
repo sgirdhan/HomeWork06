@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.sharangirdhani.homework06.LoginFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <EditText
+        android:id="@+id/edtUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/edtPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="47dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textWebPassword"
+        android:layout_below="@+id/edtUsername"
+        android:layout_alignStart="@+id/edtUsername" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="57dp"
+        android:text="Login" />
+
+    <TextView
+        android:id="@+id/tvStatic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnLogin"
+        android:layout_below="@+id/btnLogin"
+        android:layout_marginTop="14dp"
+        android:text="Not registered?"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/tvSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Signup"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_alignBaseline="@+id/tvStatic"
+        android:layout_alignBottom="@+id/tvStatic"
+        android:layout_alignEnd="@+id/btnLogin" />
+</RelativeLayout>

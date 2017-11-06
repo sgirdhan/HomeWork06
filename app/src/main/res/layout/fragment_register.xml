@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    tools:context="com.example.sharangirdhani.homework06.RegisterFragment">
+
+    <ImageButton
+        android:id="@+id/imagebuttonAvatar"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/default_cam" />
+
+    <EditText
+        android:id="@+id/editTextFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imagebuttonAvatar"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/hintFirstName"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/black"
+        />
+
+    <EditText
+        android:id="@+id/editTextLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editTextFirstName"
+        android:layout_marginTop="19dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/hintLastName"
+        android:textColor="@android:color/black"/>
+
+    <EditText
+        android:id="@+id/editTextUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextFirstName"
+        android:layout_below="@+id/editTextLastName"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/hintUserName"
+        android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/imagebuttonAvatar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="18dp"
+        android:text="@string/registerButton" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="@string/hintPassword"
+        android:maxLength="8"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/editTextUserName"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="14dp" />
+</RelativeLayout>

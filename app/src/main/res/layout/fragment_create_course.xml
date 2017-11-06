@@ -1,0 +1,281 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:layout_margin="20dp"
+    tools:context="com.example.sharangirdhani.homework06.CreateCourseFragment">
+
+
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:layout_toEndOf="@+id/textView"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titleLabel"
+        android:layout_alignBaseline="@+id/editTextTitle"
+        android:layout_alignBottom="@+id/editTextTitle"
+        android:layout_alignParentStart="true"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chooseInstructorLabel"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/editTextTitle"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="35dp"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewInstructor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView2"
+        android:scrollbars="horizontal" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scheduleLabel"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/recyclerViewInstructor"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp" />
+
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView6"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="30dp"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="88dp"
+            android:layout_height="wrap_content"
+            android:text="Day"
+            android:textColor="@android:color/black" />
+
+        <Spinner
+            android:id="@+id/spinnerDay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="120dp"
+            android:layout_weight="0.06"
+            android:textAlignment="textEnd"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignStart="@+id/linearLayout">
+
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.27"
+            android:text="Time"
+            android:textColor="@android:color/black"/>
+
+        <EditText
+            android:id="@+id/editTextHours"
+            android:layout_width="59dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout"
+            android:layout_toEndOf="@+id/textView6"
+            android:inputType="number"
+            />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.41"
+            android:text=":"
+            android:textColor="@android:color/black"/>
+
+        <EditText
+            android:id="@+id/editTextMinutes"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:inputType="number" />
+
+        <Spinner
+            android:id="@+id/spinnerTime"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/textView"
+            android:textAlignment="textEnd"
+            android:layout_weight="0.49" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout2"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/creditLabel"
+            android:textColor="@android:color/black"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioGroup"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true">
+
+            <RadioButton
+                android:id="@+id/radioButton1"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:text="1" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="57dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/radioButton10"
+                android:layout_weight="1"
+                android:text="2" />
+
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="84dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="1"
+                android:text="3" />
+        </RadioGroup>
+
+        <!--<RadioButton-->
+        <!--android:id="@+id/radioButton2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/radioGroup"-->
+        <!--android:layout_marginStart="30dp"-->
+        <!--android:layout_toEndOf="@+id/radioGroup"-->
+        <!--android:text="2" />-->
+
+        <!--<RadioButton-->
+        <!--android:id="@+id/radioButton1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_toStartOf="@+id/radioGroup"-->
+        <!--android:layout_weight="1"-->
+        <!--android:text="1" />-->
+
+        <!--<RadioButton-->
+        <!--android:id="@+id/radioButton3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_below="@+id/radioGroup"-->
+        <!--android:layout_marginEnd="20dp"-->
+        <!--android:text="3" />-->
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSemester"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/spinnerSemester"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="22dp"
+                android:text="@string/semLabel"
+                android:textColor="@android:color/black" />
+
+            <Spinner
+                android:id="@+id/spinnerSemester"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="20dp"
+                android:textAlignment="textEnd" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/buttonReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="41dp"
+            android:text="@string/resetButton" />
+
+        <Button
+            android:id="@+id/buttonCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="51dp"
+            android:text="@string/createButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+</RelativeLayout>
