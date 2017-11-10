@@ -1,0 +1,115 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    tools:context="com.example.sharangirdhani.homework06.DisplayCourseFragment">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp">
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:text="Course"
+            android:layout_marginEnd="24dp"
+            android:layout_below="@+id/textViewWebsite"
+            android:layout_toStartOf="@+id/textViewEmail" />
+
+        <TextView
+            android:id="@+id/textViewEmail"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:layout_marginEnd="36dp"
+            android:layout_alignBaseline="@+id/textView3"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:id="@+id/textViewIns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp"
+            android:text="Instructor"
+            android:layout_below="@+id/textView3"
+            android:layout_alignEnd="@+id/textView3"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/textViewInsName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textViewIns"
+            android:layout_alignBottom="@+id/textViewIns"
+            android:layout_alignEnd="@+id/textViewEmail"
+            android:layout_alignStart="@+id/textViewEmail"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textViewWebsite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/textViewInsName"
+            android:layout_alignStart="@+id/textViewInsName"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/textViewIns"
+            android:layout_below="@+id/textViewIns"
+            android:layout_marginTop="35dp"
+            android:text="Schedule"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/textViewInsWebsite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_alignBaseline="@+id/textView13"
+            android:layout_alignBottom="@+id/textView13"
+            android:layout_alignStart="@+id/textViewInsName"
+            android:layout_alignEnd="@+id/textViewInsName"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/textView13"
+            android:layout_below="@+id/textView13"
+            android:layout_marginTop="36dp"
+            android:text="Semester"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/textViewSemester"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView16"
+            android:layout_alignEnd="@+id/textViewInsWebsite"
+            android:layout_alignStart="@+id/textViewInsWebsite"
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>

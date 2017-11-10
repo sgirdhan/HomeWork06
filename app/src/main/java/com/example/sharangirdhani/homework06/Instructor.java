@@ -1,5 +1,7 @@
 package com.example.sharangirdhani.homework06;
 
+import java.io.Serializable;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -10,10 +12,10 @@ import io.realm.annotations.Required;
  * Created by sharangirdhani on 11/4/17.
  */
 
-public class Instructor extends RealmObject {
+public class Instructor extends RealmObject implements Serializable{
 
     @PrimaryKey
-    private Integer         id;
+    private long         id;
     @Required
     private String          firstName;
     @Required
@@ -25,7 +27,8 @@ public class Instructor extends RealmObject {
     @Required
     private String          personalWebsite;
     @Ignore
-    public Boolean          isChecked;
+    private boolean          isChecked;
+
 
     RealmList<Course> courses;
 
@@ -45,19 +48,19 @@ public class Instructor extends RealmObject {
         this.personalWebsite = personalWebsite;
     }
 
-    public Boolean isChecked() {
+    public boolean isChecked() {
         return isChecked;
     }
 
-    public void setChecked(Boolean checked) {
+    public void setChecked(boolean checked) {
         isChecked = checked;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 

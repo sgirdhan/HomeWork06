@@ -10,12 +10,20 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.listeners.IPickClick;
+import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +41,6 @@ public class RegisterFragment extends Fragment {
     private EditText edtPassword;
     private ImageButton icon;
     private Button register;
-
     private String firstName;
     private String lastName;
     private String userName;
@@ -41,12 +48,7 @@ public class RegisterFragment extends Fragment {
 
     private User user;
 
-    private static final int REQUEST_TAKE_PHOTO = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private String mCurrentPhotoPath;
     private Uri photoURI;
-    private int counterImage=0;
-    private boolean imageSelected;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,33 +66,25 @@ public class RegisterFragment extends Fragment {
         edtPassword = (EditText) view.findViewById(R.id.editTextPassword);
         icon = (ImageButton) view.findViewById(R.id.imagebuttonAvatar);
         register = (Button) view.findViewById(R.id.buttonRegister);
-        imageSelected = false;
-        counterImage=20;
+        photoURI = null;
         initializeFields();
+
+        setHasOptionsMenu(true);
 
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Ensure that there's a camera activity to handle the intent
-                if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                PickImageDialog.build(new PickSetup())
+                        .setOnPickResult(new IPickResult() {
+                            @Override
+                            public void onPickResult(PickResult r) {
+                                //TODO: do what you have to...
+                                photoURI = r.getUri();
+                                icon.setImageURI(null);
+                                icon.setImageURI(r.getUri());
 
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                    }
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        photoURI = FileProvider.getUriForFile(getContext(),
-                                "com.example.android.fileprovider",
-                                photoFile);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    }
-                }
+                            }
+                        }).show(getActivity().getSupportFragmentManager());
             }
         });
 
@@ -107,14 +101,26 @@ public class RegisterFragment extends Fragment {
                     return;
                 }
                 else{
-                    if(!imageSelected){
-                        photoURI = Uri.parse("android.resource://com.example.sharangirdhani.homework06/drawable/dimage");
-                    }
+
                     setUserAttributes();
+                    edtFirstName.setText("");
+                    edtLastName.setText("");
+                    edtUserName.setText("");
+                    edtPassword.setText("");
+                    photoURI = null;
+                    icon.setImageResource(R.drawable.default_cam);
+                    edtFirstName.requestFocus();
+                    mListener.goToCourseListPage();
                 }
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener.updateTitleSignup();
     }
 
     private void setUserAttributes(){
@@ -127,8 +133,6 @@ public class RegisterFragment extends Fragment {
         mListener.addUser(user);
         Toast.makeText(getContext(), "User successfully registered.",Toast.LENGTH_LONG).show();
         mListener.setIsLoggedIn(user);
-        mListener.goToCourseListPage();
-
     }
 
     private void initializeFields(){
@@ -146,58 +150,32 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.getItem(0).setEnabled(false);
+        menu.getItem(1).setEnabled(false);
+        menu.getItem(2).setEnabled(false);
+        menu.getItem(3).setEnabled(false);
+//        mListener.menuManagement(menu);
+    }
+
     boolean validation(){
         if(firstName.trim().equals("") ||
                 firstName.isEmpty() || lastName.trim().equals("") || lastName.isEmpty() ||
                 userName.trim().equals("") || userName.isEmpty() || password.trim().equals("")
-                || password.isEmpty() || password.length()<8){
+                || password.isEmpty() || password.length()<8 || photoURI==null){
             return false;
         }
         return true;
     }
 
-    /*==============================================================================================
-    Image related functions Begin
-    ==============================================================================================*/
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap bitmap = null;
-            try {
-
-                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoURI);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            icon.setImageBitmap(bitmap);
-            imageSelected = true;
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-
-        String imageFileName = "JPEG_user"+ counterImage + "_";
-        counterImage++;
-        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-
-
-    /*==============================================================================================
-    Image related functions End
-    ==============================================================================================*/
-
-    @Override
+  @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -214,16 +192,6 @@ public class RegisterFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -231,5 +199,7 @@ public class RegisterFragment extends Fragment {
         boolean isUniqueUsername(String username);
         void goToCourseListPage();
         void setIsLoggedIn(User user);
+        void updateTitleSignup();
+        void menuManagement(Menu menu);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.sharangirdhani.homework06;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +19,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.listeners.IPickResult;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.realm.RealmList;
-
-import static android.app.Activity.RESULT_OK;
 
 
 public class AddInstructorFragment extends Fragment {
@@ -40,15 +45,8 @@ public class AddInstructorFragment extends Fragment {
     private String lastName;
     private String email;
     private String website;
-
     private Instructor instructor;
-
-    private static final int REQUEST_TAKE_PHOTO = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private String mCurrentPhotoPath;
     private Uri photoURI;
-    private int counterImage=0;
-    private boolean imageSelected;
 
     private AddInstructorFragment.OnFragmentInteractionListener mListener;
 
@@ -67,33 +65,23 @@ public class AddInstructorFragment extends Fragment {
         icon = (ImageButton) view.findViewById(R.id.imagebuttonAvatar);
         btnAdd = (Button) view.findViewById(R.id.btnAdd);
         btnReset = (Button) view.findViewById(R.id.btnReset);
-        imageSelected = false;
-        counterImage=50;
+        photoURI = null;
         initializeFields();
 
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Ensure that there's a camera activity to handle the intent
-                if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                PickImageDialog.build(new PickSetup())
+                        .setOnPickResult(new IPickResult() {
+                            @Override
+                            public void onPickResult(PickResult r) {
+                                //TODO: do what you have to...
+                                photoURI = r.getUri();
+                                icon.setImageURI(null);
+                                icon.setImageURI(r.getUri());
+                            }
+                        }).show(getActivity().getSupportFragmentManager());
 
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                    }
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        photoURI = FileProvider.getUriForFile(getContext(),
-                                "com.example.android.fileprovider",
-                                photoFile);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    }
-                }
             }
         });
 
@@ -110,10 +98,15 @@ public class AddInstructorFragment extends Fragment {
                     return;
                 }
                 else{
-                    if(!imageSelected){
-                        photoURI = Uri.parse("android.resource://com.example.sharangirdhani.homework06/drawable/dimage");
-                    }
                     setInstructorAttributes();
+                    edtFirstName.setText("");
+                    edtLastName.setText("");
+                    edtEmail.setText("");
+                    edtWebsite.setText("");
+                    icon.setImageResource(R.drawable.default_cam);
+                    //setfocus
+                    edtFirstName.requestFocus();
+                    Toast.makeText(getContext(),"Instructor has been successfully added",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -129,11 +122,30 @@ public class AddInstructorFragment extends Fragment {
     }
 
     private void resetFields() {
-        edtFirstName.setText("");
-        edtLastName.setText("");
-        edtEmail.setText("");
-        edtWebsite.setText("");
-        icon.setImageResource(R.drawable.default_cam);
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                    {
+                        edtFirstName.setText("");
+                        edtLastName.setText("");
+                        edtEmail.setText("");
+                        edtWebsite.setText("");
+                        icon.setImageResource(R.drawable.default_cam);
+                    }
+
+                    break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Are you sure you want to reset?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
     private void setInstructorAttributes(){
         instructor.setFirstName(firstName);
@@ -144,10 +156,7 @@ public class AddInstructorFragment extends Fragment {
         instructor.setChecked(false);
         instructor.setCourses(new RealmList<Course>());
         mListener.addInstructor(instructor);
-        mListener.goToCourseListPage();
-
     }
-
     private void initializeFields(){
         firstName = edtFirstName.getText().toString();
         lastName = edtLastName.getText().toString();
@@ -174,52 +183,17 @@ public class AddInstructorFragment extends Fragment {
         if(firstName.trim().equals("") ||
                 firstName.isEmpty() || lastName.trim().equals("") || lastName.isEmpty() ||
                 email.trim().equals("") || email.isEmpty() || website.trim().equals("")
-                || website.isEmpty() || photoURI.toString().trim().isEmpty() || photoURI.toString().trim().equals("")){
+                || website.isEmpty() || photoURI==null){
             return false;
         }
         return true;
     }
 
-    /*==============================================================================================
-    Image related functions Begin
-    ==============================================================================================*/
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap bitmap = null;
-            try {
-
-                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoURI);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            icon.setImageBitmap(bitmap);
-            imageSelected = true;
-        }
+    public void onResume() {
+        super.onResume();
+        mListener.updateTitleAddInstructor();
     }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-
-        String imageFileName = "JPEG_instructor"+ counterImage + "_";
-        counterImage++;
-        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-
-
-    /*==============================================================================================
-    Image related functions End
-    ==============================================================================================*/
 
     @Override
     public void onAttach(Context context) {
@@ -238,20 +212,11 @@ public class AddInstructorFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
         void addInstructor(Instructor instructor);
-        void goToCourseListPage();
+        void goToInstructorListPage();
+        void updateTitleAddInstructor();
     }
 }

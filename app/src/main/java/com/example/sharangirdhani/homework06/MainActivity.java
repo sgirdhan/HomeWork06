@@ -7,45 +7,51 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-
+import java.util.List;
 import io.realm.Realm;
+
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
         CourseListFragment.OnFragmentInteractionListener,
         CreateCourseFragment.OnFragmentInteractionListener,
-        AddInstructorFragment.OnFragmentInteractionListener {
-    Realm realm;
-    LoginFragment lf;
-    RegisterFragment rf;
-    CourseListFragment clf;
-    AddInstructorFragment af;
-    CreateCourseFragment ccf;
+        AddInstructorFragment.OnFragmentInteractionListener,
+        DisplayCourseFragment.OnFragmentInteractionListener,
+        DisplayInstructorFragment.OnFragmentInteractionListener,
+        InstructorListFragment.OnFragmentInteractionListener{
 
-    User currentUser;
+    private Realm realm;
+    Menu myMenu;
+    private List<Long> instructorsIDList;
+    private LoginFragment loginFragment;
+    private RegisterFragment registerFragment;
+    private CourseListFragment courseListFragment;
+    private AddInstructorFragment addInsFragment;
+    private CreateCourseFragment createCourseFragment;
+    private DisplayCourseFragment displayCourseFragment;
+    private DisplayInstructorFragment displayInstructorFragment;
+    private InstructorListFragment instructorListFragment;
+    private User currentUser;
+    DbUtilClass dbUtilClass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         currentUser = null;
-        realm.init(this);
-        realm = Realm.getDefaultInstance();
-        lf = new LoginFragment();
-        rf = new RegisterFragment();
-        clf = new CourseListFragment();
-        af = new AddInstructorFragment();
-        ccf = new CreateCourseFragment();
+        dbUtilClass = new DbUtilClass(MainActivity.this);
+
+        loginFragment = new LoginFragment();
+        registerFragment = new RegisterFragment();
+        courseListFragment = new CourseListFragment();
+        addInsFragment = new AddInstructorFragment();
+        createCourseFragment = new CreateCourseFragment();
+        instructorListFragment = new InstructorListFragment();
 
         updateTitleMain();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.mainLayout, lf)
+                .add(R.id.mainLayout, loginFragment)
                 .commit();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        realm.close();
     }
 
     @Override
@@ -54,49 +60,143 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     @Override
+    public void removeInstructorMain(long id) {
+
+        dbUtilClass.removeInstructorMain(id);
+    }
+
+    @Override
+    public void goTODisplayInsFragment(long id) {
+        displayInstructorFragment = new DisplayInstructorFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong("instructor_id", id);
+        displayInstructorFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainLayout, displayInstructorFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void updateTitleInsDisplay() {
+        getSupportActionBar().setTitle("Instructor Details");
+    }
+
+    @Override
     public User viewOne(String userName) {
-        return realm.where(User.class).equalTo("username", userName).findFirst();
+        return dbUtilClass.viewOne(userName);
     }
 
     @Override
     public void goToSignUpPage() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainLayout, rf)
-                .addToBackStack(null)
+                .replace(R.id.mainLayout, registerFragment)
+                .addToBackStack("signup")
                 .commit();
-        updateTitleSignup();
     }
 
     public void goToLogInPage() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainLayout, lf)
+                .replace(R.id.mainLayout, loginFragment)
+                .addToBackStack("login")
                 .commit();
-        updateTitleMain();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+            String fragmentTag = getTopFragmentTag();
+            if(fragmentTag!=null){
+                if(fragmentTag.equals("login")){
+                    clearStack();
+                    currentUser = null;
+                }
+                if(fragmentTag.equals("signup")){
+                    currentUser = null;
+                }
+            }
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    public String getTopFragmentTag() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return null;
+        }
+        String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        return fragmentTag;
     }
 
     @Override
     public void goToCourseListPage() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainLayout, clf)
+                .replace(R.id.mainLayout, courseListFragment)
+                .addToBackStack("course_list")
                 .commit();
-        updateTitleMain();
+    }
+
+    @Override
+    public void updateTitleInsList() {
+        getSupportActionBar().setTitle("Instructor Manager");
     }
 
     public void goToAddInstructorPage() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainLayout, af)
+                .replace(R.id.mainLayout, new AddInstructorFragment())
                 .addToBackStack(null)
                 .commit();
-        updateTitleAddInstructor();
     }
 
+    @Override
     public void goToCreateCoursePage() {
+        createCourseFragment.setInstructorsList(fetchInstructorsForUser());
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainLayout, ccf)
+                .replace(R.id.mainLayout, createCourseFragment)
+                .addToBackStack("create_course")
+                .commit();
+    }
+
+    @Override
+    public List<Instructor> fetchInstructorsForUser(){
+        return dbUtilClass.fetchInstructorsForUser();
+    }
+
+    @Override
+    public void removeCourse(String title) {
+        dbUtilClass.removeCourse(title);
+    }
+
+    @Override
+    public void goTODisplayFragmentMain(String title) {
+        Bundle bundle = new Bundle();
+        bundle.putString("title", title);
+        displayCourseFragment = new DisplayCourseFragment();
+        displayCourseFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainLayout, displayCourseFragment)
                 .addToBackStack(null)
                 .commit();
-        updateTitleCreateCourse();
     }
+
+    @Override
+    public Instructor fetchInstructorDB(long id) {
+        return dbUtilClass.fetchInstructorDB(id);
+    }
+
+    @Override
+    public void updateTitleCurseDetail() {
+        getSupportActionBar().setTitle("Course Details");
+    }
+
+    @Override
+    public Course getCourse(String title) {
+        return dbUtilClass.fetchCourseDB(title);
+    }
+
 
     @Override
     public void updateTitleSignup() {
@@ -106,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     @Override
     public void setIsLoggedIn(User user) {
         currentUser = user;
+        dbUtilClass.setCurrentUser(currentUser);
     }
 
     public boolean isLoggedIn() {
@@ -117,10 +218,27 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         getSupportActionBar().setTitle("Course Manager");
     }
 
+    @Override
+    public void setCheckedFalseDB(){
+        dbUtilClass.setCheckedFalseDB();
+    }
+
+    @Override
+    public void updateInstructor(Instructor instructor) {
+        dbUtilClass.updateInstructor(instructor);
+    }
+
+    @Override
+    public List<Course> getCourseList() {
+        return dbUtilClass.getCourseList();
+    }
+
+    @Override
     public void updateTitleAddInstructor() {
         getSupportActionBar().setTitle("Add Instructor");
     }
 
+    @Override
     public void updateTitleCreateCourse() {
         getSupportActionBar().setTitle("Create Course");
     }
@@ -133,62 +251,85 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        myMenu = menu;
+//        menuManagement(menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.home:{
-                if(isLoggedIn()) {
-                    goToCourseListPage();
-                }
-                else {
-                    goToLogInPage();
-                }
+
+                goToCourseListPage();
                 return false;
             }
             case R.id.instructor:{
+
+                goToInstructoristPage();
+
                 return false;
             }
             case R.id.add_instructor:{
-                if(isLoggedIn()) {
-                    goToAddInstructorPage();
-                }
-                else {
-                    goToLogInPage();
-                }
+                goToAddInstructorPage();
+
                 break;
             }
             case R.id.logout:
             {
+                clearStack();
                 currentUser = null;
                 goToLogInPage();
                 break;
             }
             case R.id.exit:
             {
+                currentUser = null;
                 this.finishAffinity();
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void clearStack(){
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            int size = getSupportFragmentManager().getBackStackEntryCount();
+            for(int i=size;i>0;i--){
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+        }
+        getSupportFragmentManager().popBackStack(null, android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    @Override
+    public void menuManagement(Menu menu){
+        for(int i =0;i<4;i++){
+            menu.getItem(i).setEnabled(isLoggedIn());
+        }
+    }
+
+    private void goToInstructoristPage() {
+        instructorListFragment.setInstructorList(fetchInstructorsForUser());
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainLayout, instructorListFragment)
+                .addToBackStack("instructorList")
+                .commit();
+    }
+
     @Override
     public void addUser(User user) {
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(user);
-        realm.commitTransaction();
-        Toast.makeText(this, "User successfully added.",Toast.LENGTH_LONG).show();
+        dbUtilClass.addUser(user);
     }
 
     @Override
     public void addInstructor(Instructor instructor) {
-        Number maxValue = realm.where(Instructor.class).max("id");
-        int pk = (maxValue != null) ? (int)maxValue + 1 : 0;
-        realm.beginTransaction();
-        instructor.setId(pk);
-        currentUser.getInstructors().add(instructor);
-        realm.copyToRealmOrUpdate(instructor);
-        realm.copyToRealmOrUpdate(currentUser);
-        realm.commitTransaction();
-        Toast.makeText(this, "Instructor successfully added.",Toast.LENGTH_LONG).show();
+        dbUtilClass.addInstructor(instructor);
+    }
+
+    @Override
+    public void goToInstructorListPage() {
+        goToInstructoristPage();
     }
 
     @Override

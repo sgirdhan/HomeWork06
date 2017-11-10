@@ -14,12 +14,12 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="30dp"
-        android:layout_toEndOf="@+id/textView"
+        android:layout_toEndOf="@+id/textViewTitleLabel"
         android:ems="10"
         android:inputType="textPersonName" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewTitleLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/titleLabel"
@@ -29,7 +29,7 @@
         android:textColor="@android:color/black"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewChoose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/chooseInstructorLabel"
@@ -37,27 +37,27 @@
         android:layout_below="@+id/editTextTitle"
         android:layout_alignParentStart="true" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutRecycler"
+    <TextView
+        android:id="@+id/textViewMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="35dp"
-        android:orientation="vertical">
-
-    </LinearLayout>
+        android:layout_below="@+id/textViewChoose"
+        android:gravity="center_horizontal"
+        android:text="You haven’t added any instructor yet, please add at least one instructor to continue."
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewInstructor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="165dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/textViewChoose"
         android:scrollbars="horizontal" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textViewSchedule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/scheduleLabel"
@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView6"
+        android:layout_below="@+id/textViewSchedule"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="30dp"
         android:orientation="horizontal"
@@ -118,7 +118,7 @@
             android:layout_width="59dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/linearLayout"
-            android:layout_toEndOf="@+id/textView6"
+            android:layout_toEndOf="@+id/textViewSchedule"
             android:inputType="number"
             />
 
@@ -141,7 +141,7 @@
             android:id="@+id/spinnerTime"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_alignTop="@+id/textView"
+            android:layout_alignTop="@+id/textViewTitleLabel"
             android:textAlignment="textEnd"
             android:layout_weight="0.49" />
     </LinearLayout>
@@ -278,4 +278,5 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
+
 </RelativeLayout>

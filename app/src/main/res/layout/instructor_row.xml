@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:background="@drawable/border">
 
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageViewInstructor"
         android:layout_width="100dp"
         android:layout_height="80dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@null" />
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:id="@+id/textViewName"
@@ -23,7 +23,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@+id/imageViewInstructor"
-        android:text="Title"
+        android:text="Name"
         android:textColor="@android:color/black" />
 
     <TextView
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textViewName"
         android:layout_below="@+id/textViewName"
-        android:text="Instructor"
+        android:text="Email"
         android:textColor="@android:color/black" />
 
     <TextView
@@ -42,7 +42,7 @@
         android:layout_alignStart="@+id/textViewEmail"
         android:layout_below="@+id/textViewEmail"
         android:layout_marginTop="5dp"
-        android:text="Mon 6:30 PM"
+        android:text="Website"
         android:textColor="@android:color/black" />
 
 </RelativeLayout>

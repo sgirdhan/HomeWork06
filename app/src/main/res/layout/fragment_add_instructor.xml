@@ -80,9 +80,10 @@
         android:id="@+id/btnAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Add"
+        android:layout_alignBaseline="@+id/btnReset"
         android:layout_alignBottom="@+id/btnReset"
-        android:layout_marginStart="54dp"
-        android:layout_toEndOf="@+id/btnReset"
-        android:text="Add" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="36dp" />
 
 </RelativeLayout>

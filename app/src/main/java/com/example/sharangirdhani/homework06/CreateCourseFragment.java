@@ -1,10 +1,12 @@
 package com.example.sharangirdhani.homework06;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -18,13 +20,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 
 public class CreateCourseFragment extends Fragment implements InstructorAdapter.IInstructorAdapter{
@@ -38,6 +38,9 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
     private Button btnReset;
     private Button btnCreate;
     private RadioGroup rgGroupCredit;
+    private TextView txtEmptyMessage;
+
+    private RecyclerView recyclerViewInstructor;
 
     private View view;
 
@@ -69,9 +72,12 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_create_course, container, false);
         initialize(view);
+        reset(view);
 
         //RecyclerView
-        setAdapterAndNotify(view);
+        if(instructorsList.size()!=0){
+            setAdapterAndNotify(view);
+        }
 
         //Spinner for Day
         ArrayAdapter<CharSequence> adapterDay =
@@ -153,13 +159,33 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
             public void onClick(View v) {
                 setFields();
                 setCourseObject();
+
             }
         });
 
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reset(view);
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                            {
+                                reset(view);
+                            }
+
+                            break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure you want to reset?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
         return view;
@@ -173,13 +199,11 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
         spinnerDay.setSelection(0);
         spinnerTime.setSelection(0);
         rgGroupCredit.clearCheck();
-        realm.beginTransaction();
-        for(Instructor ins :instructorsList){
-            ins.setChecked(false);
-            realm.copyToRealmOrUpdate(ins);
+
+        mListener.setCheckedFalseDB();
+        if(instructorsList.size()!=0){
+            setAdapterAndNotify(view);
         }
-        realm.commitTransaction();
-        setAdapterAndNotify(view);
     }
 
     public void setAdapterAndNotify(View view){
@@ -213,7 +237,11 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
             return;
         }
 
+
         hours= Integer.parseInt(edtHours.getText().toString().trim());
+        if(hours<10){
+            hours = Integer.parseInt("0"+edtHours.getText().toString().trim());
+        }
         minutes = Integer.parseInt(edtMinutes.getText().toString().trim());
 
         if(!isRadioButtonClicked()){
@@ -225,47 +253,39 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
             return;
         }
 
-        //set the
-        realm.beginTransaction();
         instructor = instructorsList.get(postitionOfInstructor);
+        course.setInstructorID(instructor.getId());
         course.setTime_h(hours);
         course.setTitle(title);
         course.setTime_m(minutes);
         course.setCredit_hour(creditHour);
-        int integerDay = 0;
         course.setAmpm(time);
 
 
         if(day.equals("Monday")){
-            integerDay = 1;
+            day="Mon";
         }
         else if(day.equals("Tuesday")){
-            integerDay = 2;
+            day="Tue";
         }
         else if(day.equals("Wednesday")){
-            integerDay = 3;
+            day="Wed";
         }
         else if(day.equals("Thursday")){
-            integerDay = 4;
+            day="Thu";
         }
         else if(day.equals("Friday")){
-            integerDay = 5;
+            day="Fri";
         }
-        course.setDay(integerDay);
+        course.setDay(day);
         course.setSemester(semester);
+
+        realm.beginTransaction();
         instructor.getCourses().add(course);
         realm.copyToRealmOrUpdate(instructor);
         realm.commitTransaction();
 
-        RealmResults<Instructor> instructors = realm.where(Instructor.class).findAll();
-        instructors.load();
-        String output = "";
-
-        for(Instructor inst : instructors){
-            output+= inst.toString();
-            Log.d("demo", output);
-            Toast.makeText(getContext(),output,Toast.LENGTH_LONG).show();
-        }
+        mListener.goToCourseListPage();
     }
 
     private boolean isRadioButtonClicked(){
@@ -274,8 +294,7 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
         }
         return true;
     }
-
-    @Override
+        @Override
     public void onDestroyView() {
         super.onDestroyView();
         realm.close();
@@ -294,11 +313,16 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
         }
         return true;
     }
-    private boolean isCourseUnique(){
-        RealmResults<Course> query = realm.where(Course.class)
-                .equalTo("title", title).findAll();
-        if(query.size()>0){
-            return false;
+    private boolean isCourseUnique() {
+        List<Course> courseList = mListener.getCourseList();
+        if (courseList == null) {
+            return true;
+        } else {
+            for (Course course : courseList) {
+                if (title.equals(course.getTitle())) {
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -338,6 +362,7 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
         Realm.init(getContext());
         realm = Realm.getDefaultInstance();
 
+        mListener.setCheckedFalseDB();
         edtTitle = (EditText) view.findViewById(R.id.editTextTitle);
         edtHours = (EditText) view.findViewById(R.id.editTextHours);
         edtMinutes = (EditText) view.findViewById(R.id.editTextMinutes);
@@ -345,6 +370,19 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
         rgGroupCredit.clearCheck();
         btnCreate = (Button) view.findViewById(R.id.buttonCreate);
         btnReset = (Button) view.findViewById(R.id.buttonReset);
+        txtEmptyMessage = (TextView) view.findViewById(R.id.textViewMessage);
+        recyclerViewInstructor = ((RecyclerView) view.findViewById(R.id.recyclerViewInstructor));
+
+        if(instructorsList.size()==0){
+            recyclerViewInstructor.setVisibility(View.INVISIBLE);
+            txtEmptyMessage.setVisibility(View.VISIBLE);
+            btnCreate.setEnabled(false);
+        }
+        else{
+            recyclerViewInstructor.setVisibility(View.VISIBLE);
+            txtEmptyMessage.setVisibility(View.INVISIBLE);
+            btnCreate.setEnabled(true);
+        }
 
         edtHours.setFilters(new InputFilter[]{new InputFilterMinMax("1", "12")});
         edtMinutes.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
@@ -388,6 +426,30 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        instructorsList = mListener.fetchInstructorsForUser();
+        if(instructorsList.size()>0){
+            setAdapterAndNotify(view);
+            recyclerViewInstructor.setVisibility(View.VISIBLE);
+            txtEmptyMessage.setVisibility(View.INVISIBLE);
+            btnCreate.setEnabled(true);
+        }
+        else{
+            btnCreate.setEnabled(false);
+        }
+
+        edtTitle.setText("");
+        edtHours.setText("");
+        edtMinutes.setText("");
+        spinnerSemester.setSelection(0);
+        spinnerDay.setSelection(0);
+        spinnerTime.setSelection(0);
+        rgGroupCredit.clearCheck();
+        mListener.setCheckedFalseDB();
+        mListener.updateTitleCreateCourse();
+    }
 
     public void setInstructorsList(List<Instructor> ins) {
         instructorsList = ins;
@@ -398,8 +460,20 @@ public class CreateCourseFragment extends Fragment implements InstructorAdapter.
         postitionOfInstructor = position;
     }
 
+    @Override
+    public void makeTextMessageVisible() {
+        txtEmptyMessage.setVisibility(View.VISIBLE);
+        recyclerViewInstructor.setVisibility(View.INVISIBLE);
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        void goToCourseListPage();
+        List<Course> getCourseList();
+        void updateTitleCreateCourse();
+        void setCheckedFalseDB();
+        void updateInstructor(Instructor instructor);
+        List<Instructor> fetchInstructorsForUser();
     }
 }

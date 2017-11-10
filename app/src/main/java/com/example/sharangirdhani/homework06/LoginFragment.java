@@ -5,18 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LoginFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- */
 public class LoginFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
@@ -24,6 +20,7 @@ public class LoginFragment extends Fragment {
     EditText edtUsername;
     EditText edtPassword;
     String username, password;
+    Menu myMenu;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -39,6 +36,8 @@ public class LoginFragment extends Fragment {
         edtPassword = (EditText) view.findViewById(R.id.edtPassword);
         username = "";
         password = "";
+
+        setHasOptionsMenu(true);
 
         view.findViewById(R.id.btnLogin).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +56,8 @@ public class LoginFragment extends Fragment {
                     if (user != null) {
                         if(user.getPassword().equals(password)) {
                             Toast.makeText(getContext(),"Login Successful",Toast.LENGTH_LONG).show();
+                            edtPassword.setText("");
+                            edtUsername.setText("");
                             mListener.setIsLoggedIn(user);
                             mListener.goToCourseListPage();
                         }
@@ -110,22 +111,32 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater = getActivity().getMenuInflater();
+//        inflater.inflate(R.menu.actions, menu);
+        myMenu = menu;
+//        mListener.menuManagement(menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.getItem(0).setEnabled(false);
+        menu.getItem(1).setEnabled(false);
+        menu.getItem(2).setEnabled(false);
+        menu.getItem(3).setEnabled(false);
+
+//        mListener.menuManagement(menu);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         resetScreen();
         mListener.updateTitleMain();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -133,7 +144,7 @@ public class LoginFragment extends Fragment {
         void goToSignUpPage();
         void goToCourseListPage();
         void updateTitleMain();
-        void updateTitleSignup();
         void setIsLoggedIn(User user);
+        void menuManagement(Menu menu);
     }
 }

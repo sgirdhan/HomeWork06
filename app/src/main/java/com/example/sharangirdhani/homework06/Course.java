@@ -1,28 +1,43 @@
 package com.example.sharangirdhani.homework06;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
-/**
- * Created by sharangirdhani on 11/4/17.
- */
 
 public class Course extends RealmObject {
     @PrimaryKey
-    private String          title;
-    @Required
-    private Integer          day;
-    @Required
-    private Integer          time_h;
-    @Required
-    private Integer          time_m;
-    @Required
-    private String          ampm;
-    @Required
-    private Integer          credit_hour;
-    @Required
-    private String          semester;
+    private String title;
+    private String day;
+    private int time_h;
+    private int time_m;
+    private String ampm;
+    private int credit_hour;
+    private String semester;
+    private long instructorID;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Course)) return false;
+
+        Course course = (Course) o;
+        return getTitle().equals(course.getTitle());
+    }
+
+    @Override
+    public int hashCode() {
+        return getTitle().hashCode();
+    }
+
+    public long getInstructorID() {
+        return instructorID;
+    }
+
+    public void setInstructorID(long instructorID) {
+        this.instructorID = instructorID;
+    }
 
     public String getTitle() {
         return title;
@@ -32,27 +47,27 @@ public class Course extends RealmObject {
         this.title = title;
     }
 
-    public Integer getDay() {
+    public String getDay() {
         return day;
     }
 
-    public void setDay(Integer day) {
+    public void setDay(String day) {
         this.day = day;
     }
 
-    public Integer getTime_h() {
+    public int getTime_h() {
         return time_h;
     }
 
-    public void setTime_h(Integer time_h) {
+    public void setTime_h(int time_h) {
         this.time_h = time_h;
     }
 
-    public Integer getTime_m() {
+    public int getTime_m() {
         return time_m;
     }
 
-    public void setTime_m(Integer time_m) {
+    public void setTime_m(int time_m) {
         this.time_m = time_m;
     }
 
@@ -64,11 +79,11 @@ public class Course extends RealmObject {
         this.ampm = ampm;
     }
 
-    public Integer getCredit_hour() {
+    public int getCredit_hour() {
         return credit_hour;
     }
 
-    public void setCredit_hour(Integer credit_hour) {
+    public void setCredit_hour(int credit_hour) {
         this.credit_hour = credit_hour;
     }
 
